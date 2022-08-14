@@ -1,11 +1,19 @@
 package com.informatorio.trabajofinal.domain;
 
+import com.informatorio.trabajofinal.repository.SourceRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
+
 
 @Entity
 public class Article {
+
+    private final SourceRepository sourceRepository;
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,7 +44,8 @@ public class Article {
                    LocalDate publishedAt,
                    String content,
                    Author author,
-                   List<Source> sources) {
+                   List<Integer> sourcesIds,
+                   SourceRepository sourceRepository) {
         this.title = title;
         this.description = description;
         this.url = url;
@@ -44,21 +53,23 @@ public class Article {
         this.publishedAt = publishedAt;
         this.content = content;
         this.author = author;
-        addSources(sources);
-    }
-
-    public Article() {
+        this.sourceRepository = sourceRepository;
+        addSources(sourcesIds);
     }
 
     public List<Source> getSources() {
         return sources;
     }
 
-    public void addSources(List<Source> sources) {
-        sources.stream()
-                .forEach(source -> this.sources.add(source));
-        sources.stream()
-                .forEach(source -> source.getArticles().add(this));
+    public void addSources(List<Integer> sourcesIds) {
+        List<Source> sources = sourcesIds.stream()
+                .map(id -> sourceRepository.findById(id))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());
+        this.sources = sources;
+       // sources.stream()
+        //        .forEach(source -> source.getArticles().add(this));
     }
 
 
