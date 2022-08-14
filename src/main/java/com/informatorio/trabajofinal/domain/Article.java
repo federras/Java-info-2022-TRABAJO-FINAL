@@ -2,7 +2,7 @@ package com.informatorio.trabajofinal.domain;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.Objects;
+import java.util.*;
 
 @Entity
 public class Article {
@@ -21,8 +21,13 @@ public class Article {
     @ManyToOne(fetch = FetchType.LAZY)
     private Author author;
 
-    //private Set<Source> sources;
-
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(
+            name = "article_source",
+            joinColumns = @JoinColumn(name = "article_id"),
+            inverseJoinColumns = @JoinColumn(name = "source_id")
+            )
+    private List<Source> sources = new ArrayList<>();
 
     public Article(String title,
                    String description,
@@ -30,7 +35,8 @@ public class Article {
                    String urlToImage,
                    LocalDate publishedAt,
                    String content,
-                   Author author) {
+                   Author author,
+                   List<Source> sources) {
         this.title = title;
         this.description = description;
         this.url = url;
@@ -38,12 +44,25 @@ public class Article {
         this.publishedAt = publishedAt;
         this.content = content;
         this.author = author;
+        addSources(sources);
     }
 
     public Article() {
     }
 
-   public Author getAuthor() {
+    public List<Source> getSources() {
+        return sources;
+    }
+
+    public void addSources(List<Source> sources) {
+        sources.stream()
+                .forEach(source -> this.sources.add(source));
+        sources.stream()
+                .forEach(source -> source.getArticles().add(this));
+    }
+
+
+    public Author getAuthor() {
         return author;
    }
 
@@ -104,6 +123,14 @@ public class Article {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Article article = (Article) o;
+        return Objects.equals(id, article.id) && Objects.equals(title, article.title) && Objects.equals(description, article.description) && Objects.equals(url, article.url) && Objects.equals(urlToImage, article.urlToImage) && Objects.equals(publishedAt, article.publishedAt) && Objects.equals(content, article.content);
+    }
+
+    @Override
     public String toString() {
         return "Article{" +
                 "id=" + id +
@@ -113,15 +140,9 @@ public class Article {
                 ", urlToImage='" + urlToImage + '\'' +
                 ", publishedAt=" + publishedAt +
                 ", content='" + content + '\'' +
+                ", author=" + author +
+                ", sources=" + sources +
                 '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Article article = (Article) o;
-        return Objects.equals(id, article.id) && Objects.equals(title, article.title) && Objects.equals(description, article.description) && Objects.equals(url, article.url) && Objects.equals(urlToImage, article.urlToImage) && Objects.equals(publishedAt, article.publishedAt) && Objects.equals(content, article.content);
     }
 
     @Override
