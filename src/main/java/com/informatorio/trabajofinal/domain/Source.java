@@ -35,7 +35,7 @@ public class Source {
         return articles;
     }
 
-    public void setArticles(ArrayList<Article> articles) {
+    public void setArticles(List<Article> articles) {
         this.articles = articles;
     }
 

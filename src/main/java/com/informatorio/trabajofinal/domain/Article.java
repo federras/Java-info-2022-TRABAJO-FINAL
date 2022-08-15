@@ -1,7 +1,12 @@
 package com.informatorio.trabajofinal.domain;
 
+import com.fasterxml.jackson.annotation.JacksonInject;
+import com.informatorio.trabajofinal.controller.SourceController;
 import com.informatorio.trabajofinal.repository.SourceRepository;
+import org.hibernate.service.spi.InjectService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Service;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -11,9 +16,6 @@ import java.util.stream.Collectors;
 
 @Entity
 public class Article {
-
-    private final SourceRepository sourceRepository;
-
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,9 +45,7 @@ public class Article {
                    String urlToImage,
                    LocalDate publishedAt,
                    String content,
-                   Author author,
-                   List<Integer> sourcesIds,
-                   SourceRepository sourceRepository) {
+                   Author author){
         this.title = title;
         this.description = description;
         this.url = url;
@@ -53,25 +53,33 @@ public class Article {
         this.publishedAt = publishedAt;
         this.content = content;
         this.author = author;
-        this.sourceRepository = sourceRepository;
-        addSources(sourcesIds);
+        }
+
+    public Article() {
     }
 
     public List<Source> getSources() {
         return sources;
     }
 
-    public void addSources(List<Integer> sourcesIds) {
+
+
+   // public void addSources(List<Source> sources) {
+     //   this.sources = sources;
+        //sources.stream()
+        //        .forEach(source -> source.getArticles().add(this));
+
+        /*
         List<Source> sources = sourcesIds.stream()
                 .map(id -> sourceRepository.findById(id))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList());
         this.sources = sources;
+        */
        // sources.stream()
         //        .forEach(source -> source.getArticles().add(this));
-    }
-
+    //}
 
     public Author getAuthor() {
         return author;
@@ -158,6 +166,6 @@ public class Article {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, description, url, urlToImage, publishedAt, content);
+        return Objects.hash(id, title, description, url, urlToImage, publishedAt, content, author, sources);
     }
 }
