@@ -1,10 +1,16 @@
 package com.informatorio.trabajofinal.dto;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 public class AuthorDTO {
     private Integer id;
+    @NotEmpty
+    @NotNull
     private String firstname;
+    @NotEmpty
+    @NotNull
     private String lastname;
     private String fullname;
     private LocalDate createdAt;
@@ -12,12 +18,11 @@ public class AuthorDTO {
     public AuthorDTO(Integer id,
                      String firstname,
                      String lastname,
-                     String fullname,
                      LocalDate createdAt){
         this.id = id;
         this.firstname = firstname;
         this.lastname = lastname;
-        this.fullname = fullname;
+        setFullname(firstname, lastname);
         this.createdAt = createdAt;
     }
 
@@ -52,8 +57,8 @@ public class AuthorDTO {
         return fullname;
     }
 
-    public void setFullname(String fullname) {
-        this.fullname = fullname;
+    public void setFullname(String firstname, String lastname) {
+        this.fullname = firstname + " " + lastname;
     }
 
     public LocalDate getCreatedAt() {

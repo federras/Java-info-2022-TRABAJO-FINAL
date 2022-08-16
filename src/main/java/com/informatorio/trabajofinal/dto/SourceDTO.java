@@ -1,11 +1,15 @@
 package com.informatorio.trabajofinal.dto;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.Objects;
 
 
 public class SourceDTO {
     private Integer id;
+    @NotNull
+    @NotEmpty
     private String name;
     private String code;
     private LocalDate createdAt;

@@ -1,18 +1,8 @@
 package com.informatorio.trabajofinal.domain;
 
-import com.fasterxml.jackson.annotation.JacksonInject;
-import com.informatorio.trabajofinal.controller.SourceController;
-import com.informatorio.trabajofinal.repository.SourceRepository;
-import org.hibernate.service.spi.InjectService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.stereotype.Service;
-
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.*;
-import java.util.stream.Collectors;
-
 
 @Entity
 public class Article {
@@ -20,7 +10,6 @@ public class Article {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String title;
     private String description;
     private String url;
@@ -31,7 +20,7 @@ public class Article {
     @ManyToOne(fetch = FetchType.LAZY)
     private Author author;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToMany(cascade = {CascadeType.ALL})
     @JoinTable(
             name = "article_source",
             joinColumns = @JoinColumn(name = "article_id"),
@@ -43,14 +32,13 @@ public class Article {
                    String description,
                    String url,
                    String urlToImage,
-                   LocalDate publishedAt,
                    String content,
                    Author author){
         this.title = title;
         this.description = description;
         this.url = url;
         this.urlToImage = urlToImage;
-        this.publishedAt = publishedAt;
+        this.publishedAt = null;
         this.content = content;
         this.author = author;
         }
@@ -64,22 +52,22 @@ public class Article {
 
 
 
-   // public void addSources(List<Source> sources) {
-     //   this.sources = sources;
-        //sources.stream()
-        //        .forEach(source -> source.getArticles().add(this));
+   /*public void addSources(List<Source> sources) {
+        this.sources = sources;
+        sources.stream()
+                .forEach(source -> source.getArticles().add(this));
 
-        /*
+
         List<Source> sources = sourcesIds.stream()
                 .map(id -> sourceRepository.findById(id))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList());
         this.sources = sources;
-        */
-       // sources.stream()
-        //        .forEach(source -> source.getArticles().add(this));
-    //}
+
+        sources.stream()
+                .forEach(source -> source.getArticles().add(this));
+    }*/
 
     public Author getAuthor() {
         return author;
@@ -105,8 +93,12 @@ public class Article {
         this.urlToImage = urlToImage;
     }
 
-    public void setPublishedAt(LocalDate publishedAt) {
-        this.publishedAt = publishedAt;
+    public void setPublishedAt() {
+        this.publishedAt = LocalDate.now();
+    }
+
+    public void modifyPublishedAt(LocalDate date) {
+        this.publishedAt = date;
     }
 
     public void setContent(String content) {

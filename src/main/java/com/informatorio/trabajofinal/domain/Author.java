@@ -1,7 +1,5 @@
 package com.informatorio.trabajofinal.domain;
 
-import org.springframework.stereotype.Repository;
-
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -22,10 +20,10 @@ public class Author {
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Article> articles = new ArrayList<>();
 
-    public Author(String firstname, String lastname, LocalDate createdAt) {
+    public Author(String firstname, String lastname) {
         this.firstname = firstname;
         this.lastname = lastname;
-        this.createdAt = createdAt;
+        this.createdAt = LocalDate.now();
         setFullname(firstname, lastname);
     }
 

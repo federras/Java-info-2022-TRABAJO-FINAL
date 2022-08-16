@@ -18,9 +18,9 @@ public class Source {
     @ManyToMany(mappedBy = "sources", cascade = CascadeType.ALL)
     private List<Article> articles = new ArrayList<>();
 
-    public Source(String name, LocalDate createdAt) {
+    public Source(String name) {
         this.name = name;
-        this.createdAt = createdAt;
+        this.createdAt = LocalDate.now();
         setCode(name);
     }
 

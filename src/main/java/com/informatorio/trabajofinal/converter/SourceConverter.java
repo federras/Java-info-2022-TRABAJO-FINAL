@@ -22,4 +22,8 @@ public class SourceConverter {
                 .map(source -> toDto(source))
                 .collect(Collectors.toList());
     }
+
+    public Source toEntity(SourceDTO sourceDTO) {
+        return new Source(sourceDTO.getName());
+    }
 }

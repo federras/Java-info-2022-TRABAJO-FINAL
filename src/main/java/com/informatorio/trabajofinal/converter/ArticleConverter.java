@@ -5,6 +5,9 @@ import com.informatorio.trabajofinal.dto.ArticleDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Set;
+import java.util.stream.Collectors;
+
 @Component
 public class ArticleConverter {
 
@@ -27,5 +30,20 @@ public class ArticleConverter {
                 article.getContent(),
                 authorConverter.toDto(article.getAuthor()),
                 sourceConverter.listSourcesToDto(article.getSources()));
+    }
+
+    public Set<ArticleDTO> toDto(Set<Article> articles) {
+        return articles.stream()
+                .map(article -> toDto(article))
+                .collect(Collectors.toSet());
+    }
+
+    public Article toEntity(ArticleDTO articleDTO) {
+        return new Article(articleDTO.getTitle(),
+                articleDTO.getDescription(),
+                articleDTO.getUrl(),
+                articleDTO.getUrlToImage(),
+                articleDTO.getContent(),
+                authorConverter.toEntityExistent(articleDTO.getAuthor()));
     }
 }
