@@ -49,7 +49,6 @@ public class SourceController {
         if (source != null) {
             source.setName(sourceDTO.getName());
             source.setCode(sourceDTO.getName());
-            source.setCreatedAt(sourceDTO.getCreatedAt());
             sourceRepository.save(source);
             return new ResponseEntity<>(sourceConverter.toDto(source), HttpStatus.OK);
         } else {

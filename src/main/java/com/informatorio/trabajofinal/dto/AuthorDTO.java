@@ -1,16 +1,16 @@
 package com.informatorio.trabajofinal.dto;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 public class AuthorDTO {
     private Integer id;
-    @NotEmpty
-    @NotNull
+    @NotEmpty(message = "firstname esta vacio")
+    @NotNull(message = "firstname es null y eso no puede serrrr!!!")
     private String firstname;
-    @NotEmpty
-    @NotNull
+    @NotBlank(message = "El lastname no puede ser null ni blanco")
     private String lastname;
     private String fullname;
     private LocalDate createdAt;

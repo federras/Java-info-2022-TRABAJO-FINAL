@@ -1,7 +1,6 @@
 package com.informatorio.trabajofinal.dto;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,22 +8,17 @@ import java.util.List;
 public class ArticleDTO {
 
     private Long id;
-    @NotNull
-    @NotEmpty
+    @NotBlank
     private String title;
-    @NotNull
-    @NotEmpty
+    @NotBlank
     private String description;
-    @NotNull
-    @NotEmpty
+    @NotBlank
     private String url;
     private String urlToImage;
     private LocalDate publishedAt;
-    @NotNull
-    @NotEmpty
+    @NotBlank
     private String content;
-    @NotNull
-    @NotEmpty
+    @NotBlank
     private AuthorDTO author;
     private List<SourceDTO> sources = new ArrayList<>();
 
