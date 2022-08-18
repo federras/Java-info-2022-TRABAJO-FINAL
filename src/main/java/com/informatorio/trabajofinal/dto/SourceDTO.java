@@ -1,7 +1,12 @@
 package com.informatorio.trabajofinal.dto;
 
+import com.informatorio.trabajofinal.domain.Article;
+import com.informatorio.trabajofinal.domain.Source;
+
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 
@@ -12,6 +17,9 @@ public class SourceDTO {
     private String code;
     private LocalDate createdAt;
 
+    private List<Article> articles = new ArrayList<>();
+
+
     public SourceDTO(Integer id, String name, String code, LocalDate createdAt) {
         this.id = id;
         this.name = name;
@@ -20,6 +28,23 @@ public class SourceDTO {
     }
 
     public SourceDTO() {
+    }
+
+  /*  public void addArticles(Article article){
+        sources.stream()
+                .forEach(source -> source.getArticles().add(article));
+    };*/
+
+    public void addArticle(Article article){
+        this.articles.add(article);
+    };
+
+    public List<Article> getArticles() {
+        return articles;
+    }
+
+    public void setArticles(List<Article> articles) {
+        this.articles = articles;
     }
 
     public Integer getId() {

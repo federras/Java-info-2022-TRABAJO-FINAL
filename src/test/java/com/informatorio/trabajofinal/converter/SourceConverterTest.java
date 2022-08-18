@@ -20,7 +20,7 @@ class SourceConverterTest {
 
     @BeforeEach
     void setUp() {
-        this.sourceConverter = new SourceConverter();
+        this.sourceConverter = sourceConverter;
 
         sourceDTO = new SourceDTO(3,
                 "Diario Cara de Roca",

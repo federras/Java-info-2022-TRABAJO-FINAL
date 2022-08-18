@@ -2,7 +2,9 @@ package com.informatorio.trabajofinal.controller;
 
 import com.informatorio.trabajofinal.converter.ArticleConverter;
 import com.informatorio.trabajofinal.converter.AuthorConverter;
+import com.informatorio.trabajofinal.converter.SourceConverter;
 import com.informatorio.trabajofinal.domain.Article;
+import com.informatorio.trabajofinal.domain.Source;
 import com.informatorio.trabajofinal.dto.ArticleDTO;
 import com.informatorio.trabajofinal.repository.ArticleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,14 +22,17 @@ public class ArticleController {
     private final ArticleRepository articleRepository;
     private final ArticleConverter articleConverter;
     private final AuthorConverter authorConverter;
+    private final SourceConverter sourceConverter;
 
     @Autowired
     public ArticleController(ArticleRepository articleRepository,
                              ArticleConverter articleConverter,
-                             AuthorConverter authorConverter) {
+                             AuthorConverter authorConverter,
+                             SourceConverter sourceConverter) {
         this.articleRepository = articleRepository;
         this.articleConverter = articleConverter;
         this.authorConverter = authorConverter;
+        this.sourceConverter = sourceConverter;
     }
 
     @PostMapping("/article")
@@ -59,6 +64,7 @@ public class ArticleController {
             capture.modifyPublishedAt(articleDTO.getPublishedAt());
             capture.setContent(articleDTO.getContent());
             capture.setAuthor(authorConverter.toEntityExistent(articleDTO.getAuthor()));
+            capture.setSources(sourceConverter.verifySourcesExist(articleDTO.getSources()));
             articleRepository.save(capture);
             return new ResponseEntity<>(articleConverter.toDto(capture), HttpStatus.OK);
         } else {
@@ -71,9 +77,13 @@ public class ArticleController {
         Article capture = articleRepository.findById(id).orElse(null);
         if (capture != null) {
             if (capture.getPublishedAt() == null) {
-                capture.setPublishedAt();
-                articleRepository.save(capture);
-                return new ResponseEntity<>(articleConverter.toDto(capture), HttpStatus.OK);
+                if (!capture.getSources().isEmpty()){
+                    capture.setPublishedAt();
+                    articleRepository.save(capture);
+                    return new ResponseEntity<>(articleConverter.toDto(capture), HttpStatus.OK);
+                } else {
+                    return new ResponseEntity<>("Le falta cargar el Source", HttpStatus.CONFLICT);
+                }
             } else {
                 return new ResponseEntity<>("Article Ya Publicado", HttpStatus.CONFLICT);
             }

@@ -39,11 +39,15 @@ public class ArticleConverter {
     }
 
     public Article toEntity(ArticleDTO articleDTO) {
-        return new Article(articleDTO.getTitle(),
-                articleDTO.getDescription(),
-                articleDTO.getUrl(),
-                articleDTO.getUrlToImage(),
-                articleDTO.getContent(),
-                authorConverter.toEntityExistent(articleDTO.getAuthor()));
+        if (authorConverter.toEntityExistent(articleDTO.getAuthor()) != null) {
+            return new Article(articleDTO.getTitle(),
+                    articleDTO.getDescription(),
+                    articleDTO.getUrl(),
+                    articleDTO.getUrlToImage(),
+                    articleDTO.getContent(),
+                    authorConverter.toEntityExistent(articleDTO.getAuthor()),
+                    sourceConverter.verifySourcesExist(articleDTO.getSources()));
+        }
+        return null;
     }
 }

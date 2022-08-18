@@ -33,7 +33,8 @@ public class Article {
                    String url,
                    String urlToImage,
                    String content,
-                   Author author){
+                   Author author,
+                   List<Source> sources){
         this.title = title;
         this.description = description;
         this.url = url;
@@ -41,6 +42,7 @@ public class Article {
         this.publishedAt = null;
         this.content = content;
         this.author = author;
+        this.sources = sources;
         }
 
     public Article() {
@@ -50,7 +52,11 @@ public class Article {
         return sources;
     }
 
-
+    public void setSources(List<Source> sources) {
+        this.sources = sources;
+        sources.stream()
+                .forEach(source -> source.getArticles().add(this));
+    }
 
    /*public void addSources(List<Source> sources) {
         this.sources = sources;
@@ -98,7 +104,9 @@ public class Article {
     }
 
     public void modifyPublishedAt(LocalDate date) {
-        this.publishedAt = date;
+        if (date.isBefore(LocalDate.now()) || date.isEqual(LocalDate.now())) {
+            this.publishedAt = date;
+        }
     }
 
     public void setContent(String content) {
